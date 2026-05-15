@@ -83,14 +83,16 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 13 "parser.y"
+#line 14 "parser.y"
 
     int   num;
     float fnum;
     char *str;
     bool  boolean;
+    Nodo *nodo;
+    std::vector<Nodo*>* list;
 
-#line 94 "parser.tab.h"
+#line 96 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

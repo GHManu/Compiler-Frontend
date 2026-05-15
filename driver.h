@@ -1,6 +1,7 @@
 #pragma once
 #include <map>
 #include <string>
+#include "ast.h"
 
 
 // ── Symbol table ──────────────────────────────────────────
@@ -19,5 +20,6 @@ struct Simbolo {
 class Driver {
 public:
     std::map<std::string, Simbolo> tabella;
+    Programma programma; // Nodo radice dell'AST
     int parse();
 };

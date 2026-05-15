@@ -29,7 +29,7 @@ Il progetto consiste nello sviluppo di un **sistema di analisi e interpretazione
     flex lexer.l (Crea lex.yy.c)
 
 3. Compila tutto insieme:
-    g++ lex.yy.c parser.tab.c -o compiler
+    g++ lex.yy.c parser.tab.c ast.cpp -o compiler
 
 4. Esegui: 
     ./compiler 

@@ -74,8 +74,9 @@
 
 extern int yylex(Driver& drv);
 void yyerror(Driver& drv,const char *s);
+extern FILE* yyin; 
 
-#line 79 "parser.tab.c"
+#line 80 "parser.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -130,11 +131,10 @@ enum yysymbol_kind_t
   YYSYMBOL_YYACCEPT = 24,                  /* $accept  */
   YYSYMBOL_programma = 25,                 /* programma  */
   YYSYMBOL_lista_istruzioni = 26,          /* lista_istruzioni  */
-  YYSYMBOL_istruzione = 27,                /* istruzione  */
-  YYSYMBOL_28_1 = 28,                      /* $@1  */
+  YYSYMBOL_blocco = 27,                    /* blocco  */
+  YYSYMBOL_istruzione = 28,                /* istruzione  */
   YYSYMBOL_condizione = 29,                /* condizione  */
-  YYSYMBOL_blocco = 30,                    /* blocco  */
-  YYSYMBOL_espressione = 31                /* espressione  */
+  YYSYMBOL_espressione = 30                /* espressione  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -465,16 +465,16 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  12
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   54
+#define YYLAST   52
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  24
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  8
+#define YYNNTS  7
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  25
+#define YYNRULES  24
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  52
+#define YYNSTATES  51
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   278
@@ -525,9 +525,9 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    44,    44,    48,    49,    53,    61,    69,    77,    85,
-      94,    94,   100,   101,   102,   103,   104,   105,   106,   110,
-     111,   115,   116,   117,   129,   130
+       0,    49,    49,    57,    63,    69,    70,    74,    82,    90,
+      98,   106,   114,   121,   122,   123,   124,   125,   126,   127,
+     131,   132,   133,   145,   146
 };
 #endif
 
@@ -547,8 +547,8 @@ static const char *const yytname[] =
   "T_FLOAT_NUMBER", "T_ID", "T_SEMICOLON", "T_ERROR", "T_INT", "T_FLOAT",
   "T_ASSIGN", "T_PLUS", "T_MINUS", "T_IF", "T_LPAREN", "T_RPAREN",
   "T_LBRACE", "T_RBRACE", "T_EQ", "T_NE", "T_LT", "T_GT", "T_LE", "T_GE",
-  "$accept", "programma", "lista_istruzioni", "istruzione", "$@1",
-  "condizione", "blocco", "espressione", YY_NULLPTR
+  "$accept", "programma", "lista_istruzioni", "blocco", "istruzione",
+  "condizione", "espressione", YY_NULLPTR
 };
 
 static const char *
@@ -572,12 +572,12 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      28,    -4,    10,    13,    20,    35,   -11,    28,    -1,    36,
+      29,    -4,    10,    13,    21,    40,   -11,    29,    -1,    37,
       39,    -1,   -11,   -11,   -11,   -11,   -11,    -1,     8,   -11,
-      -1,   -11,    -1,    37,     9,   -11,   -11,    -1,    32,    33,
-     -11,    -1,    -1,    -1,    -1,    -1,    -1,   -11,   -11,   -11,
-       0,    40,    40,    40,    40,    40,    40,    28,   -11,   -11,
-      30,   -11
+      -1,   -11,    -1,    31,     9,   -11,   -11,    -1,    30,    33,
+       0,    -1,    -1,    -1,    -1,    -1,    -1,   -11,   -11,   -11,
+      29,   -11,   -11,    41,    41,    41,    41,    41,    41,    34,
+     -11
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -586,23 +586,23 @@ static const yytype_int8 yypact[] =
 static const yytype_int8 yydefact[] =
 {
        4,     0,     0,     0,     0,     0,     2,     4,     0,     0,
-       0,     0,     1,     3,    21,    22,    23,     0,     0,     5,
-       0,     7,     0,     0,    18,    25,     9,     0,     0,     0,
-      10,     0,     0,     0,     0,     0,     0,    24,     6,     8,
-       0,    12,    13,    14,    15,    16,    17,     4,    20,    11,
-       0,    19
+       0,     0,     1,     3,    20,    21,    22,     0,     0,     7,
+       0,     9,     0,     0,    19,    24,    11,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,    23,     8,    10,
+       4,    12,     6,    13,    14,    15,    16,    17,    18,     0,
+       5
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -11,   -11,    -7,    14,   -11,   -11,   -11,   -10
+     -11,   -11,    -7,   -11,    18,   -11,   -10
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-       0,     5,     6,     7,    40,    23,    49,    18
+       0,     5,     6,    41,     7,    23,    18
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -611,11 +611,11 @@ static const yytype_int8 yydefgoto[] =
 static const yytype_int8 yytable[] =
 {
       13,    24,    14,    15,    16,     1,     8,    25,     2,     3,
-      28,    17,    29,     4,    26,     9,    47,    37,    10,    27,
-      27,    41,    42,    43,    44,    45,    46,    31,    32,    33,
-      34,    35,    36,     1,    11,    12,     2,     3,    38,    39,
-      50,     4,    19,    27,    27,    21,    20,    51,     0,    22,
-       0,    27,    30,     0,    48
+      28,    17,    29,     4,    26,     9,    40,    37,    10,    27,
+      27,    43,    44,    45,    46,    47,    48,    31,    32,    33,
+      34,    35,    36,    49,     1,    11,    38,     2,     3,    39,
+      12,    27,     4,    19,    27,    21,    30,    20,    42,    22,
+       0,    50,    27
 };
 
 static const yytype_int8 yycheck[] =
@@ -623,37 +623,37 @@ static const yytype_int8 yycheck[] =
        7,    11,     3,     4,     5,     5,    10,    17,     8,     9,
       20,    12,    22,    13,     6,     5,    16,    27,     5,    11,
       11,    31,    32,    33,    34,    35,    36,    18,    19,    20,
-      21,    22,    23,     5,    14,     0,     8,     9,     6,     6,
-      47,    13,     6,    11,    11,     6,    10,    17,    -1,    10,
-      -1,    11,    15,    -1,    40
+      21,    22,    23,    40,     5,    14,     6,     8,     9,     6,
+       0,    11,    13,     6,    11,     6,    15,    10,    30,    10,
+      -1,    17,    11
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     5,     8,     9,    13,    25,    26,    27,    10,     5,
-       5,    14,     0,    26,     3,     4,     5,    12,    31,     6,
-      10,     6,    10,    29,    31,    31,     6,    11,    31,    31,
-      15,    18,    19,    20,    21,    22,    23,    31,     6,     6,
-      28,    31,    31,    31,    31,    31,    31,    16,    27,    30,
-      26,    17
+       0,     5,     8,     9,    13,    25,    26,    28,    10,     5,
+       5,    14,     0,    26,     3,     4,     5,    12,    30,     6,
+      10,     6,    10,    29,    30,    30,     6,    11,    30,    30,
+      15,    18,    19,    20,    21,    22,    23,    30,     6,     6,
+      16,    27,    28,    30,    30,    30,    30,    30,    30,    26,
+      17
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    24,    25,    26,    26,    27,    27,    27,    27,    27,
-      28,    27,    29,    29,    29,    29,    29,    29,    29,    30,
-      30,    31,    31,    31,    31,    31
+       0,    24,    25,    26,    26,    27,    27,    28,    28,    28,
+      28,    28,    28,    29,    29,    29,    29,    29,    29,    29,
+      30,    30,    30,    30,    30
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     1,     2,     0,     3,     5,     3,     5,     4,
-       0,     6,     3,     3,     3,     3,     3,     3,     1,     3,
-       1,     1,     1,     1,     3,     2
+       0,     2,     1,     2,     0,     3,     1,     3,     5,     3,
+       5,     4,     5,     3,     3,     3,     3,     3,     3,     1,
+       1,     1,     1,     3,     2
 };
 
 
@@ -1231,159 +1231,196 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-  case 5: /* istruzione: T_INT T_ID T_SEMICOLON  */
-#line 54 "parser.y"
+  case 2: /* programma: lista_istruzioni  */
+#line 50 "parser.y"
     {
-        if (drv.tabella.count((yyvsp[-1].str))) yyerror(drv,"Variabile già dichiarata");
+        drv.programma.istruzioni = std::move(*(yyvsp[0].list));
+        delete (yyvsp[0].list);
+    }
+#line 1241 "parser.tab.c"
+    break;
+
+  case 3: /* lista_istruzioni: istruzione lista_istruzioni  */
+#line 58 "parser.y"
+    {
+        (yyvsp[0].list)->insert((yyvsp[0].list)->begin(), (yyvsp[-1].nodo));  // <- inserisce in testa per mantenere l'ordine
+        (yyval.list) = (yyvsp[0].list);
+    }
+#line 1250 "parser.tab.c"
+    break;
+
+  case 4: /* lista_istruzioni: %empty  */
+#line 63 "parser.y"
+    {
+        (yyval.list) = new std::vector<Nodo*>();
+    }
+#line 1258 "parser.tab.c"
+    break;
+
+  case 5: /* blocco: T_LBRACE lista_istruzioni T_RBRACE  */
+#line 69 "parser.y"
+                                        { (yyval.list) = (yyvsp[-1].list); }
+#line 1264 "parser.tab.c"
+    break;
+
+  case 6: /* blocco: istruzione  */
+#line 70 "parser.y"
+                 { (yyval.list) = new std::vector<Nodo*>({(yyvsp[0].nodo)}); }
+#line 1270 "parser.tab.c"
+    break;
+
+  case 7: /* istruzione: T_INT T_ID T_SEMICOLON  */
+#line 75 "parser.y"
+    {
+        if (drv.tabella.count((yyvsp[-1].str))) yyerror(drv, "Variabile già dichiarata");
         else {
             drv.tabella[(yyvsp[-1].str)] = { TIPO_INT, false, 0 };
-            std::cout << "[PARSER] Dichiarato int: " << (yyvsp[-1].str) << std::endl;
+            (yyval.nodo) = new NodoDichiara("int", (yyvsp[-1].str), nullptr);
         }
     }
-#line 1244 "parser.tab.c"
+#line 1282 "parser.tab.c"
     break;
 
-  case 6: /* istruzione: T_INT T_ID T_ASSIGN espressione T_SEMICOLON  */
-#line 62 "parser.y"
+  case 8: /* istruzione: T_INT T_ID T_ASSIGN espressione T_SEMICOLON  */
+#line 83 "parser.y"
     {
-        if (drv.tabella.count((yyvsp[-3].str))) yyerror(drv,"Variabile già dichiarata");
+        if (drv.tabella.count((yyvsp[-3].str))) yyerror(drv, "Variabile già dichiarata");
         else {
-            drv.tabella[(yyvsp[-3].str)] = { TIPO_INT, true, (yyvsp[-1].fnum) };
-            std::cout << "[PARSER] " << (yyvsp[-3].str) << " = " << (yyvsp[-1].fnum) << std::endl;
+            drv.tabella[(yyvsp[-3].str)] = { TIPO_INT, true, 0 };
+            (yyval.nodo) = new NodoDichiara("int", (yyvsp[-3].str), (yyvsp[-1].nodo));  // $4 è già un Nodo*
         }
     }
-#line 1256 "parser.tab.c"
+#line 1294 "parser.tab.c"
     break;
 
-  case 7: /* istruzione: T_FLOAT T_ID T_SEMICOLON  */
-#line 70 "parser.y"
+  case 9: /* istruzione: T_FLOAT T_ID T_SEMICOLON  */
+#line 91 "parser.y"
     {
-        if (drv.tabella.count((yyvsp[-1].str))) yyerror(drv,"Variabile già dichiarata");
+        if (drv.tabella.count((yyvsp[-1].str))) yyerror(drv, "Variabile già dichiarata");
         else {
             drv.tabella[(yyvsp[-1].str)] = { TIPO_FLOAT, false, 0.0f };
-            std::cout << "[PARSER] Dichiarato float: " << (yyvsp[-1].str) << std::endl;
+            (yyval.nodo) = new NodoDichiara("float", (yyvsp[-1].str), nullptr);
         }
     }
-#line 1268 "parser.tab.c"
+#line 1306 "parser.tab.c"
     break;
 
-  case 8: /* istruzione: T_FLOAT T_ID T_ASSIGN espressione T_SEMICOLON  */
-#line 78 "parser.y"
+  case 10: /* istruzione: T_FLOAT T_ID T_ASSIGN espressione T_SEMICOLON  */
+#line 99 "parser.y"
     {
-        if (drv.tabella.count((yyvsp[-3].str))) yyerror(drv,"Variabile già dichiarata");
+        if (drv.tabella.count((yyvsp[-3].str))) yyerror(drv, "Variabile già dichiarata");
         else {
-            drv.tabella[(yyvsp[-3].str)] = { TIPO_FLOAT, true, (yyvsp[-1].fnum) };
-            std::cout << "[PARSER] " << (yyvsp[-3].str) << " = " << (yyvsp[-1].fnum) << std::endl;
+            drv.tabella[(yyvsp[-3].str)] = { TIPO_FLOAT, true, 0.0f };
+            (yyval.nodo) = new NodoDichiara("float", (yyvsp[-3].str), (yyvsp[-1].nodo));
         }
     }
-#line 1280 "parser.tab.c"
+#line 1318 "parser.tab.c"
     break;
 
-  case 9: /* istruzione: T_ID T_ASSIGN espressione T_SEMICOLON  */
-#line 86 "parser.y"
+  case 11: /* istruzione: T_ID T_ASSIGN espressione T_SEMICOLON  */
+#line 107 "parser.y"
     {
-        if (!drv.tabella.count((yyvsp[-3].str))) yyerror(drv,"Variabile non dichiarata");
+        if (!drv.tabella.count((yyvsp[-3].str))) yyerror(drv, "Variabile non dichiarata");
         else {
             drv.tabella[(yyvsp[-3].str)].inizializzato = true;
-            drv.tabella[(yyvsp[-3].str)].valore = (yyvsp[-1].fnum);
-            std::cout << "[PARSER] Assegnamento: " << (yyvsp[-3].str) << " = " << (yyvsp[-1].fnum) << std::endl;
+            (yyval.nodo) = new NodoAssegna((yyvsp[-3].str), (yyvsp[-1].nodo));
         }
     }
-#line 1293 "parser.tab.c"
+#line 1330 "parser.tab.c"
     break;
 
-  case 10: /* $@1: %empty  */
-#line 94 "parser.y"
-                                        { 
-        std::cout << "[PARSER] Valuto IF: la condizione è " << ((yyvsp[-1].boolean) ? "VERA" : "FALSA") << std::endl;
-    }
-#line 1301 "parser.tab.c"
-    break;
-
-  case 12: /* condizione: espressione T_EQ espressione  */
-#line 100 "parser.y"
-                                 { (yyval.boolean) = ((yyvsp[-2].fnum) == (yyvsp[0].fnum)); }
-#line 1307 "parser.tab.c"
-    break;
-
-  case 13: /* condizione: espressione T_NE espressione  */
-#line 101 "parser.y"
-                                   { (yyval.boolean) = ((yyvsp[-2].fnum) != (yyvsp[0].fnum)); }
-#line 1313 "parser.tab.c"
-    break;
-
-  case 14: /* condizione: espressione T_LT espressione  */
-#line 102 "parser.y"
-                                   { (yyval.boolean) = ((yyvsp[-2].fnum) < (yyvsp[0].fnum)); }
-#line 1319 "parser.tab.c"
-    break;
-
-  case 15: /* condizione: espressione T_GT espressione  */
-#line 103 "parser.y"
-                                   { (yyval.boolean) = ((yyvsp[-2].fnum) > (yyvsp[0].fnum)); }
-#line 1325 "parser.tab.c"
-    break;
-
-  case 16: /* condizione: espressione T_LE espressione  */
-#line 104 "parser.y"
-                                   { (yyval.boolean) = ((yyvsp[-2].fnum) <= (yyvsp[0].fnum)); }
-#line 1331 "parser.tab.c"
-    break;
-
-  case 17: /* condizione: espressione T_GE espressione  */
-#line 105 "parser.y"
-                                   { (yyval.boolean) = ((yyvsp[-2].fnum) >= (yyvsp[0].fnum)); }
-#line 1337 "parser.tab.c"
-    break;
-
-  case 18: /* condizione: espressione  */
-#line 106 "parser.y"
-                                   { (yyval.boolean) = ((yyvsp[0].fnum) != 0); }
-#line 1343 "parser.tab.c"
-    break;
-
-  case 21: /* espressione: T_INT_NUMBER  */
+  case 12: /* istruzione: T_IF T_LPAREN condizione T_RPAREN blocco  */
 #line 115 "parser.y"
-                   { (yyval.fnum) = (float)(yyvsp[0].num); }
-#line 1349 "parser.tab.c"
+    {
+        (yyval.nodo) = new NodoIf((yyvsp[-2].nodo), (yyvsp[0].list));  // condizione e blocco sono già Nodo*
+    }
+#line 1338 "parser.tab.c"
     break;
 
-  case 22: /* espressione: T_FLOAT_NUMBER  */
-#line 116 "parser.y"
-                     { (yyval.fnum) = (yyvsp[0].fnum); }
-#line 1355 "parser.tab.c"
+  case 13: /* condizione: espressione T_EQ espressione  */
+#line 121 "parser.y"
+                                 { (yyval.nodo) = new NodoBinop('=', (yyvsp[-2].nodo), (yyvsp[0].nodo)); }
+#line 1344 "parser.tab.c"
     break;
 
-  case 23: /* espressione: T_ID  */
-#line 118 "parser.y"
+  case 14: /* condizione: espressione T_NE espressione  */
+#line 122 "parser.y"
+                                   { (yyval.nodo) = new NodoBinop('!', (yyvsp[-2].nodo), (yyvsp[0].nodo)); }
+#line 1350 "parser.tab.c"
+    break;
+
+  case 15: /* condizione: espressione T_LT espressione  */
+#line 123 "parser.y"
+                                   { (yyval.nodo) = new NodoBinop('<', (yyvsp[-2].nodo), (yyvsp[0].nodo)); }
+#line 1356 "parser.tab.c"
+    break;
+
+  case 16: /* condizione: espressione T_GT espressione  */
+#line 124 "parser.y"
+                                   { (yyval.nodo) = new NodoBinop('>', (yyvsp[-2].nodo), (yyvsp[0].nodo)); }
+#line 1362 "parser.tab.c"
+    break;
+
+  case 17: /* condizione: espressione T_LE espressione  */
+#line 125 "parser.y"
+                                   { (yyval.nodo) = new NodoBinop('l', (yyvsp[-2].nodo), (yyvsp[0].nodo)); }
+#line 1368 "parser.tab.c"
+    break;
+
+  case 18: /* condizione: espressione T_GE espressione  */
+#line 126 "parser.y"
+                                   { (yyval.nodo) = new NodoBinop('g', (yyvsp[-2].nodo), (yyvsp[0].nodo)); }
+#line 1374 "parser.tab.c"
+    break;
+
+  case 19: /* condizione: espressione  */
+#line 127 "parser.y"
+                                   { (yyval.nodo) = (yyvsp[0].nodo); }
+#line 1380 "parser.tab.c"
+    break;
+
+  case 20: /* espressione: T_INT_NUMBER  */
+#line 131 "parser.y"
+                   { (yyval.nodo) = new NodoIntero((yyvsp[0].num)); }
+#line 1386 "parser.tab.c"
+    break;
+
+  case 21: /* espressione: T_FLOAT_NUMBER  */
+#line 132 "parser.y"
+                     { (yyval.nodo) = new NodoFloat((yyvsp[0].fnum)); }
+#line 1392 "parser.tab.c"
+    break;
+
+  case 22: /* espressione: T_ID  */
+#line 134 "parser.y"
     {
         if (!drv.tabella.count((yyvsp[0].str))) {
-            yyerror(drv,"Variabile non dichiarata");
-            (yyval.fnum) = 0;
+            yyerror(drv, "Variabile non dichiarata");
+            (yyval.nodo) = nullptr;
         } else if (!drv.tabella[(yyvsp[0].str)].inizializzato) {
-            yyerror(drv,"Variabile usata prima di essere inizializzata");
-            (yyval.fnum) = 0;
+            yyerror(drv, "Variabile usata prima di essere inizializzata");
+            (yyval.nodo) = nullptr;
         } else {
-            (yyval.fnum) = drv.tabella[(yyvsp[0].str)].valore;
+            (yyval.nodo) = new NodoID((yyvsp[0].str));
         }
     }
-#line 1371 "parser.tab.c"
+#line 1408 "parser.tab.c"
     break;
 
-  case 24: /* espressione: espressione T_PLUS espressione  */
-#line 129 "parser.y"
-                                     { (yyval.fnum) = (yyvsp[-2].fnum) + (yyvsp[0].fnum); }
-#line 1377 "parser.tab.c"
+  case 23: /* espressione: espressione T_PLUS espressione  */
+#line 145 "parser.y"
+                                     { (yyval.nodo) = new NodoBinop('+', (yyvsp[-2].nodo), (yyvsp[0].nodo)); }
+#line 1414 "parser.tab.c"
     break;
 
-  case 25: /* espressione: T_MINUS espressione  */
-#line 130 "parser.y"
-                                    { (yyval.fnum) = -(yyvsp[0].fnum); }
-#line 1383 "parser.tab.c"
+  case 24: /* espressione: T_MINUS espressione  */
+#line 146 "parser.y"
+                                     { (yyval.nodo) = new NodoUnario((yyvsp[0].nodo)); }
+#line 1420 "parser.tab.c"
     break;
 
 
-#line 1387 "parser.tab.c"
+#line 1424 "parser.tab.c"
 
       default: break;
     }
@@ -1581,7 +1618,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 133 "parser.y"
+#line 149 "parser.y"
 
 
 void yyerror(Driver& drv,const char *s) {
@@ -1589,8 +1626,28 @@ void yyerror(Driver& drv,const char *s) {
               << ": Errore: " << s << std::endl;
 }
 
-int main() {
+int main(int argc, char* argv[]) {
     Driver drv;
-    std::cout << "Inserisci codice (es: int x = 10; if (x > 5) { x = x + 1; }):" << std::endl;
-    return yyparse(drv);
+
+    if (argc > 1) {
+        // legge da file se passi un argomento
+        FILE* f = fopen(argv[1], "r");
+        if (!f) {
+            std::cerr << "Errore: file '" << argv[1] << "' non trovato\n";
+            return 1;
+        }
+        yyin = f;  // yyin è la variabile globale di Flex per l'input
+        std::cout << "Leggo da file: " << argv[1] << "\n";
+    } else {
+        // altrimenti stdin come prima
+        std::cout << "Inserisci codice (Ctrl+D per terminare):\n";
+    }
+
+    int risultato = yyparse(drv);
+    if (argc > 1) fclose(yyin);
+
+    if (risultato == 0)
+        drv.programma.print();
+
+    return 0;
 }
