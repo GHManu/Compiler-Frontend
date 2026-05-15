@@ -232,6 +232,10 @@ per fare si che i blocchi possano restituire un valore:
 
 Tabella dei Simboli: Ora ha un campo float valore. Anche se hai int, memorizzarli come float in questa fase è più semplice per gestire i calcoli misti.
 
-$$ = ...: In ogni regola di espressione e condizione, abbiamo aggiunto l'operazione matematica o logica reale.
+'$$' = ...: In ogni regola di espressione e condizione, abbiamo aggiunto l'operazione matematica o logica reale.
 
 Output: Ad ogni assegnamento o valutazione dell'IF, il parser stamperà a console il valore calcolato.
+
+
+## 7. Location Tracking
+riga e colonna negli errori

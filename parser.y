@@ -19,6 +19,8 @@ extern int yylex();
 void yyerror(const char *s);
 %}
 
+%locations
+
 %union {
     int   num;
     float fnum;
@@ -142,7 +144,8 @@ espressione:
 %%
 
 void yyerror(const char *s) {
-    std::cerr << "Errore: " << s << std::endl;
+    std::cerr << yylloc.first_line << ":" << yylloc.first_column
+              << ": Errore: " << s << std::endl;
 }
 
 int main() {

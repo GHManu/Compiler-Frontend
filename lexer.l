@@ -2,9 +2,17 @@
 #include "parser.tab.h"
 #include <iostream>
 void yyerror(const char *s);
+
+// eseguito automaticamente prima di ogni azione
+#define YY_USER_ACTION \
+    yylloc.first_line   = yylloc.last_line   = yylineno; \
+    yylloc.first_column = yylloc.last_column + 1; \
+    yylloc.last_column  = yylloc.first_column + yyleng - 1;
+
+
 %}
 
-%option noyywrap
+%option noyywrap yylineno
 
 %x COMMENTO
 
