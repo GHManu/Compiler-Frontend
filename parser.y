@@ -1,23 +1,12 @@
 %{
 #include <iostream>
-#include <string>
-#include <map>
+#include "driver.h"
 
-// ── Symbol table ──────────────────────────────────────────
-enum TipoVar { TIPO_INT, TIPO_FLOAT };
-
-struct Simbolo {
-    TipoVar tipo;
-    bool    inizializzato;
-    float   valore; // Memorizziamo il valore (usiamo float per semplicità tra i due tipi)
-};
-
-std::map<std::string, Simbolo> tabella;
-// ──────────────────────────────────────────────────────────
-
-extern int yylex();
-void yyerror(const char *s);
+extern int yylex(Driver& drv);
+void yyerror(Driver& drv,const char *s);
 %}
+
+%param { Driver& drv }
 
 %locations
 
@@ -63,42 +52,42 @@ lista_istruzioni:
 istruzione:
     T_INT T_ID T_SEMICOLON
     {
-        if (tabella.count($2)) yyerror("Variabile già dichiarata");
+        if (drv.tabella.count($2)) yyerror(drv,"Variabile già dichiarata");
         else {
-            tabella[$2] = { TIPO_INT, false, 0 };
+            drv.tabella[$2] = { TIPO_INT, false, 0 };
             std::cout << "[PARSER] Dichiarato int: " << $2 << std::endl;
         }
     }
     | T_INT T_ID T_ASSIGN espressione T_SEMICOLON
     {
-        if (tabella.count($2)) yyerror("Variabile già dichiarata");
+        if (drv.tabella.count($2)) yyerror(drv,"Variabile già dichiarata");
         else {
-            tabella[$2] = { TIPO_INT, true, $4 };
+            drv.tabella[$2] = { TIPO_INT, true, $4 };
             std::cout << "[PARSER] " << $2 << " = " << $4 << std::endl;
         }
     }
     | T_FLOAT T_ID T_SEMICOLON
     {
-        if (tabella.count($2)) yyerror("Variabile già dichiarata");
+        if (drv.tabella.count($2)) yyerror(drv,"Variabile già dichiarata");
         else {
-            tabella[$2] = { TIPO_FLOAT, false, 0.0f };
+            drv.tabella[$2] = { TIPO_FLOAT, false, 0.0f };
             std::cout << "[PARSER] Dichiarato float: " << $2 << std::endl;
         }
     }
     | T_FLOAT T_ID T_ASSIGN espressione T_SEMICOLON
     {
-        if (tabella.count($2)) yyerror("Variabile già dichiarata");
+        if (drv.tabella.count($2)) yyerror(drv,"Variabile già dichiarata");
         else {
-            tabella[$2] = { TIPO_FLOAT, true, $4 };
+            drv.tabella[$2] = { TIPO_FLOAT, true, $4 };
             std::cout << "[PARSER] " << $2 << " = " << $4 << std::endl;
         }
     }
     | T_ID T_ASSIGN espressione T_SEMICOLON
     {
-        if (!tabella.count($1)) yyerror("Variabile non dichiarata");
+        if (!drv.tabella.count($1)) yyerror(drv,"Variabile non dichiarata");
         else {
-            tabella[$1].inizializzato = true;
-            tabella[$1].valore = $3;
+            drv.tabella[$1].inizializzato = true;
+            drv.tabella[$1].valore = $3;
             std::cout << "[PARSER] Assegnamento: " << $1 << " = " << $3 << std::endl;
         }
     }
@@ -127,14 +116,14 @@ espressione:
     | T_FLOAT_NUMBER { $$ = $1; }
     | T_ID
     {
-        if (!tabella.count($1)) {
-            yyerror("Variabile non dichiarata");
+        if (!drv.tabella.count($1)) {
+            yyerror(drv,"Variabile non dichiarata");
             $$ = 0;
-        } else if (!tabella[$1].inizializzato) {
-            yyerror("Variabile usata prima di essere inizializzata");
+        } else if (!drv.tabella[$1].inizializzato) {
+            yyerror(drv,"Variabile usata prima di essere inizializzata");
             $$ = 0;
         } else {
-            $$ = tabella[$1].valore;
+            $$ = drv.tabella[$1].valore;
         }
     }
     | espressione T_PLUS espressione { $$ = $1 + $3; }
@@ -143,12 +132,13 @@ espressione:
 
 %%
 
-void yyerror(const char *s) {
+void yyerror(Driver& drv,const char *s) {
     std::cerr << yylloc.first_line << ":" << yylloc.first_column
               << ": Errore: " << s << std::endl;
 }
 
 int main() {
+    Driver drv;
     std::cout << "Inserisci codice (es: int x = 10; if (x > 5) { x = x + 1; }):" << std::endl;
-    return yyparse();
+    return yyparse(drv);
 }

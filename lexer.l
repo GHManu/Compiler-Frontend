@@ -1,7 +1,12 @@
 %{
+#include "driver.h"
 #include "parser.tab.h"
 #include <iostream>
-void yyerror(const char *s);
+
+
+void yyerror(Driver& drv, const char *s);
+
+#define YY_DECL int yylex(Driver& drv)
 
 // eseguito automaticamente prima di ogni azione
 #define YY_USER_ACTION \
@@ -43,7 +48,7 @@ void yyerror(const char *s);
 [0-9]+                  { 
                             long long val = strtoll(yytext, NULL, 10);
                             if (val > 2147483647LL || val < -2147483648LL) {
-                                yyerror("Overflow: intero fuori range");
+                                yyerror(drv,"Overflow: intero fuori range");
                                 return T_ERROR;
                             }
                             yylval.num = (int)val;
@@ -52,7 +57,7 @@ void yyerror(const char *s);
 [0-9]+"."[0-9]*         {
                             double val = strtod(yytext, NULL);
                             if (val > 3.4028235e+38) {
-                                yyerror("Overflow: float fuori range");
+                                yyerror(drv,"Overflow: float fuori range");
                                 return T_ERROR;
                             }
                             yylval.fnum = (float)val;

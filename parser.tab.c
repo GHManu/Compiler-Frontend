@@ -70,25 +70,12 @@
 #line 1 "parser.y"
 
 #include <iostream>
-#include <string>
-#include <map>
+#include "driver.h"
 
-// ── Symbol table ──────────────────────────────────────────
-enum TipoVar { TIPO_INT, TIPO_FLOAT };
+extern int yylex(Driver& drv);
+void yyerror(Driver& drv,const char *s);
 
-struct Simbolo {
-    TipoVar tipo;
-    bool    inizializzato;
-    float   valore; // Memorizziamo il valore (usiamo float per semplicità tra i due tipi)
-};
-
-std::map<std::string, Simbolo> tabella;
-// ──────────────────────────────────────────────────────────
-
-extern int yylex();
-void yyerror(const char *s);
-
-#line 92 "parser.tab.c"
+#line 79 "parser.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -538,9 +525,9 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    55,    55,    59,    60,    64,    72,    80,    88,    96,
-     105,   105,   111,   112,   113,   114,   115,   116,   117,   121,
-     122,   126,   127,   128,   140,   141
+       0,    44,    44,    48,    49,    53,    61,    69,    77,    85,
+      94,    94,   100,   101,   102,   103,   104,   105,   106,   110,
+     111,   115,   116,   117,   129,   130
 };
 #endif
 
@@ -695,7 +682,7 @@ enum { YYENOMEM = -2 };
       }                                                           \
     else                                                          \
       {                                                           \
-        yyerror (YY_("syntax error: cannot back up")); \
+        yyerror (drv, YY_("syntax error: cannot back up")); \
         YYERROR;                                                  \
       }                                                           \
   while (0)
@@ -811,7 +798,7 @@ do {                                                                      \
     {                                                                     \
       YYFPRINTF (stderr, "%s ", Title);                                   \
       yy_symbol_print (stderr,                                            \
-                  Kind, Value, Location); \
+                  Kind, Value, Location, drv); \
       YYFPRINTF (stderr, "\n");                                           \
     }                                                                     \
 } while (0)
@@ -823,11 +810,12 @@ do {                                                                      \
 
 static void
 yy_symbol_value_print (FILE *yyo,
-                       yysymbol_kind_t yykind, YYSTYPE const * const yyvaluep, YYLTYPE const * const yylocationp)
+                       yysymbol_kind_t yykind, YYSTYPE const * const yyvaluep, YYLTYPE const * const yylocationp, Driver& drv)
 {
   FILE *yyoutput = yyo;
   YY_USE (yyoutput);
   YY_USE (yylocationp);
+  YY_USE (drv);
   if (!yyvaluep)
     return;
   YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
@@ -842,14 +830,14 @@ yy_symbol_value_print (FILE *yyo,
 
 static void
 yy_symbol_print (FILE *yyo,
-                 yysymbol_kind_t yykind, YYSTYPE const * const yyvaluep, YYLTYPE const * const yylocationp)
+                 yysymbol_kind_t yykind, YYSTYPE const * const yyvaluep, YYLTYPE const * const yylocationp, Driver& drv)
 {
   YYFPRINTF (yyo, "%s %s (",
              yykind < YYNTOKENS ? "token" : "nterm", yysymbol_name (yykind));
 
   YYLOCATION_PRINT (yyo, yylocationp);
   YYFPRINTF (yyo, ": ");
-  yy_symbol_value_print (yyo, yykind, yyvaluep, yylocationp);
+  yy_symbol_value_print (yyo, yykind, yyvaluep, yylocationp, drv);
   YYFPRINTF (yyo, ")");
 }
 
@@ -883,7 +871,7 @@ do {                                                            \
 
 static void
 yy_reduce_print (yy_state_t *yyssp, YYSTYPE *yyvsp, YYLTYPE *yylsp,
-                 int yyrule)
+                 int yyrule, Driver& drv)
 {
   int yylno = yyrline[yyrule];
   int yynrhs = yyr2[yyrule];
@@ -897,7 +885,7 @@ yy_reduce_print (yy_state_t *yyssp, YYSTYPE *yyvsp, YYLTYPE *yylsp,
       yy_symbol_print (stderr,
                        YY_ACCESSING_SYMBOL (+yyssp[yyi + 1 - yynrhs]),
                        &yyvsp[(yyi + 1) - (yynrhs)],
-                       &(yylsp[(yyi + 1) - (yynrhs)]));
+                       &(yylsp[(yyi + 1) - (yynrhs)]), drv);
       YYFPRINTF (stderr, "\n");
     }
 }
@@ -905,7 +893,7 @@ yy_reduce_print (yy_state_t *yyssp, YYSTYPE *yyvsp, YYLTYPE *yylsp,
 # define YY_REDUCE_PRINT(Rule)          \
 do {                                    \
   if (yydebug)                          \
-    yy_reduce_print (yyssp, yyvsp, yylsp, Rule); \
+    yy_reduce_print (yyssp, yyvsp, yylsp, Rule, drv); \
 } while (0)
 
 /* Nonzero means print parse trace.  It is left uninitialized so that
@@ -946,10 +934,11 @@ int yydebug;
 
 static void
 yydestruct (const char *yymsg,
-            yysymbol_kind_t yykind, YYSTYPE *yyvaluep, YYLTYPE *yylocationp)
+            yysymbol_kind_t yykind, YYSTYPE *yyvaluep, YYLTYPE *yylocationp, Driver& drv)
 {
   YY_USE (yyvaluep);
   YY_USE (yylocationp);
+  YY_USE (drv);
   if (!yymsg)
     yymsg = "Deleting";
   YY_SYMBOL_PRINT (yymsg, yykind, yyvaluep, yylocationp);
@@ -982,7 +971,7 @@ int yynerrs;
 `----------*/
 
 int
-yyparse (void)
+yyparse (Driver& drv)
 {
     yy_state_fast_t yystate = 0;
     /* Number of tokens to shift before error messages enabled.  */
@@ -1151,7 +1140,7 @@ yybackup:
   if (yychar == YYEMPTY)
     {
       YYDPRINTF ((stderr, "Reading a token\n"));
-      yychar = yylex ();
+      yychar = yylex (drv);
     }
 
   if (yychar <= YYEOF)
@@ -1243,158 +1232,158 @@ yyreduce:
   switch (yyn)
     {
   case 5: /* istruzione: T_INT T_ID T_SEMICOLON  */
-#line 65 "parser.y"
+#line 54 "parser.y"
     {
-        if (tabella.count((yyvsp[-1].str))) yyerror("Variabile già dichiarata");
+        if (drv.tabella.count((yyvsp[-1].str))) yyerror(drv,"Variabile già dichiarata");
         else {
-            tabella[(yyvsp[-1].str)] = { TIPO_INT, false, 0 };
+            drv.tabella[(yyvsp[-1].str)] = { TIPO_INT, false, 0 };
             std::cout << "[PARSER] Dichiarato int: " << (yyvsp[-1].str) << std::endl;
         }
     }
-#line 1255 "parser.tab.c"
+#line 1244 "parser.tab.c"
     break;
 
   case 6: /* istruzione: T_INT T_ID T_ASSIGN espressione T_SEMICOLON  */
-#line 73 "parser.y"
+#line 62 "parser.y"
     {
-        if (tabella.count((yyvsp[-3].str))) yyerror("Variabile già dichiarata");
+        if (drv.tabella.count((yyvsp[-3].str))) yyerror(drv,"Variabile già dichiarata");
         else {
-            tabella[(yyvsp[-3].str)] = { TIPO_INT, true, (yyvsp[-1].fnum) };
+            drv.tabella[(yyvsp[-3].str)] = { TIPO_INT, true, (yyvsp[-1].fnum) };
             std::cout << "[PARSER] " << (yyvsp[-3].str) << " = " << (yyvsp[-1].fnum) << std::endl;
         }
     }
-#line 1267 "parser.tab.c"
+#line 1256 "parser.tab.c"
     break;
 
   case 7: /* istruzione: T_FLOAT T_ID T_SEMICOLON  */
-#line 81 "parser.y"
+#line 70 "parser.y"
     {
-        if (tabella.count((yyvsp[-1].str))) yyerror("Variabile già dichiarata");
+        if (drv.tabella.count((yyvsp[-1].str))) yyerror(drv,"Variabile già dichiarata");
         else {
-            tabella[(yyvsp[-1].str)] = { TIPO_FLOAT, false, 0.0f };
+            drv.tabella[(yyvsp[-1].str)] = { TIPO_FLOAT, false, 0.0f };
             std::cout << "[PARSER] Dichiarato float: " << (yyvsp[-1].str) << std::endl;
         }
     }
-#line 1279 "parser.tab.c"
+#line 1268 "parser.tab.c"
     break;
 
   case 8: /* istruzione: T_FLOAT T_ID T_ASSIGN espressione T_SEMICOLON  */
-#line 89 "parser.y"
+#line 78 "parser.y"
     {
-        if (tabella.count((yyvsp[-3].str))) yyerror("Variabile già dichiarata");
+        if (drv.tabella.count((yyvsp[-3].str))) yyerror(drv,"Variabile già dichiarata");
         else {
-            tabella[(yyvsp[-3].str)] = { TIPO_FLOAT, true, (yyvsp[-1].fnum) };
+            drv.tabella[(yyvsp[-3].str)] = { TIPO_FLOAT, true, (yyvsp[-1].fnum) };
             std::cout << "[PARSER] " << (yyvsp[-3].str) << " = " << (yyvsp[-1].fnum) << std::endl;
         }
     }
-#line 1291 "parser.tab.c"
+#line 1280 "parser.tab.c"
     break;
 
   case 9: /* istruzione: T_ID T_ASSIGN espressione T_SEMICOLON  */
-#line 97 "parser.y"
+#line 86 "parser.y"
     {
-        if (!tabella.count((yyvsp[-3].str))) yyerror("Variabile non dichiarata");
+        if (!drv.tabella.count((yyvsp[-3].str))) yyerror(drv,"Variabile non dichiarata");
         else {
-            tabella[(yyvsp[-3].str)].inizializzato = true;
-            tabella[(yyvsp[-3].str)].valore = (yyvsp[-1].fnum);
+            drv.tabella[(yyvsp[-3].str)].inizializzato = true;
+            drv.tabella[(yyvsp[-3].str)].valore = (yyvsp[-1].fnum);
             std::cout << "[PARSER] Assegnamento: " << (yyvsp[-3].str) << " = " << (yyvsp[-1].fnum) << std::endl;
         }
     }
-#line 1304 "parser.tab.c"
+#line 1293 "parser.tab.c"
     break;
 
   case 10: /* $@1: %empty  */
-#line 105 "parser.y"
+#line 94 "parser.y"
                                         { 
         std::cout << "[PARSER] Valuto IF: la condizione è " << ((yyvsp[-1].boolean) ? "VERA" : "FALSA") << std::endl;
     }
-#line 1312 "parser.tab.c"
+#line 1301 "parser.tab.c"
     break;
 
   case 12: /* condizione: espressione T_EQ espressione  */
-#line 111 "parser.y"
+#line 100 "parser.y"
                                  { (yyval.boolean) = ((yyvsp[-2].fnum) == (yyvsp[0].fnum)); }
-#line 1318 "parser.tab.c"
+#line 1307 "parser.tab.c"
     break;
 
   case 13: /* condizione: espressione T_NE espressione  */
-#line 112 "parser.y"
+#line 101 "parser.y"
                                    { (yyval.boolean) = ((yyvsp[-2].fnum) != (yyvsp[0].fnum)); }
-#line 1324 "parser.tab.c"
+#line 1313 "parser.tab.c"
     break;
 
   case 14: /* condizione: espressione T_LT espressione  */
-#line 113 "parser.y"
+#line 102 "parser.y"
                                    { (yyval.boolean) = ((yyvsp[-2].fnum) < (yyvsp[0].fnum)); }
-#line 1330 "parser.tab.c"
+#line 1319 "parser.tab.c"
     break;
 
   case 15: /* condizione: espressione T_GT espressione  */
-#line 114 "parser.y"
+#line 103 "parser.y"
                                    { (yyval.boolean) = ((yyvsp[-2].fnum) > (yyvsp[0].fnum)); }
-#line 1336 "parser.tab.c"
+#line 1325 "parser.tab.c"
     break;
 
   case 16: /* condizione: espressione T_LE espressione  */
-#line 115 "parser.y"
+#line 104 "parser.y"
                                    { (yyval.boolean) = ((yyvsp[-2].fnum) <= (yyvsp[0].fnum)); }
-#line 1342 "parser.tab.c"
+#line 1331 "parser.tab.c"
     break;
 
   case 17: /* condizione: espressione T_GE espressione  */
-#line 116 "parser.y"
+#line 105 "parser.y"
                                    { (yyval.boolean) = ((yyvsp[-2].fnum) >= (yyvsp[0].fnum)); }
-#line 1348 "parser.tab.c"
+#line 1337 "parser.tab.c"
     break;
 
   case 18: /* condizione: espressione  */
-#line 117 "parser.y"
+#line 106 "parser.y"
                                    { (yyval.boolean) = ((yyvsp[0].fnum) != 0); }
-#line 1354 "parser.tab.c"
+#line 1343 "parser.tab.c"
     break;
 
   case 21: /* espressione: T_INT_NUMBER  */
-#line 126 "parser.y"
+#line 115 "parser.y"
                    { (yyval.fnum) = (float)(yyvsp[0].num); }
-#line 1360 "parser.tab.c"
+#line 1349 "parser.tab.c"
     break;
 
   case 22: /* espressione: T_FLOAT_NUMBER  */
-#line 127 "parser.y"
+#line 116 "parser.y"
                      { (yyval.fnum) = (yyvsp[0].fnum); }
-#line 1366 "parser.tab.c"
+#line 1355 "parser.tab.c"
     break;
 
   case 23: /* espressione: T_ID  */
-#line 129 "parser.y"
+#line 118 "parser.y"
     {
-        if (!tabella.count((yyvsp[0].str))) {
-            yyerror("Variabile non dichiarata");
+        if (!drv.tabella.count((yyvsp[0].str))) {
+            yyerror(drv,"Variabile non dichiarata");
             (yyval.fnum) = 0;
-        } else if (!tabella[(yyvsp[0].str)].inizializzato) {
-            yyerror("Variabile usata prima di essere inizializzata");
+        } else if (!drv.tabella[(yyvsp[0].str)].inizializzato) {
+            yyerror(drv,"Variabile usata prima di essere inizializzata");
             (yyval.fnum) = 0;
         } else {
-            (yyval.fnum) = tabella[(yyvsp[0].str)].valore;
+            (yyval.fnum) = drv.tabella[(yyvsp[0].str)].valore;
         }
     }
-#line 1382 "parser.tab.c"
+#line 1371 "parser.tab.c"
     break;
 
   case 24: /* espressione: espressione T_PLUS espressione  */
-#line 140 "parser.y"
+#line 129 "parser.y"
                                      { (yyval.fnum) = (yyvsp[-2].fnum) + (yyvsp[0].fnum); }
-#line 1388 "parser.tab.c"
+#line 1377 "parser.tab.c"
     break;
 
   case 25: /* espressione: T_MINUS espressione  */
-#line 141 "parser.y"
+#line 130 "parser.y"
                                     { (yyval.fnum) = -(yyvsp[0].fnum); }
-#line 1394 "parser.tab.c"
+#line 1383 "parser.tab.c"
     break;
 
 
-#line 1398 "parser.tab.c"
+#line 1387 "parser.tab.c"
 
       default: break;
     }
@@ -1442,7 +1431,7 @@ yyerrlab:
   if (!yyerrstatus)
     {
       ++yynerrs;
-      yyerror (YY_("syntax error"));
+      yyerror (drv, YY_("syntax error"));
     }
 
   yyerror_range[1] = yylloc;
@@ -1460,7 +1449,7 @@ yyerrlab:
       else
         {
           yydestruct ("Error: discarding",
-                      yytoken, &yylval, &yylloc);
+                      yytoken, &yylval, &yylloc, drv);
           yychar = YYEMPTY;
         }
     }
@@ -1516,7 +1505,7 @@ yyerrlab1:
 
       yyerror_range[1] = *yylsp;
       yydestruct ("Error: popping",
-                  YY_ACCESSING_SYMBOL (yystate), yyvsp, yylsp);
+                  YY_ACCESSING_SYMBOL (yystate), yyvsp, yylsp, drv);
       YYPOPSTACK (1);
       yystate = *yyssp;
       YY_STACK_PRINT (yyss, yyssp);
@@ -1557,7 +1546,7 @@ yyabortlab:
 | yyexhaustedlab -- YYNOMEM (memory exhaustion) comes here.  |
 `-----------------------------------------------------------*/
 yyexhaustedlab:
-  yyerror (YY_("memory exhausted"));
+  yyerror (drv, YY_("memory exhausted"));
   yyresult = 2;
   goto yyreturnlab;
 
@@ -1572,7 +1561,7 @@ yyreturnlab:
          user semantic actions for why this is necessary.  */
       yytoken = YYTRANSLATE (yychar);
       yydestruct ("Cleanup: discarding lookahead",
-                  yytoken, &yylval, &yylloc);
+                  yytoken, &yylval, &yylloc, drv);
     }
   /* Do not reclaim the symbols of the rule whose action triggered
      this YYABORT or YYACCEPT.  */
@@ -1581,7 +1570,7 @@ yyreturnlab:
   while (yyssp != yyss)
     {
       yydestruct ("Cleanup: popping",
-                  YY_ACCESSING_SYMBOL (+*yyssp), yyvsp, yylsp);
+                  YY_ACCESSING_SYMBOL (+*yyssp), yyvsp, yylsp, drv);
       YYPOPSTACK (1);
     }
 #ifndef yyoverflow
@@ -1592,15 +1581,16 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 144 "parser.y"
+#line 133 "parser.y"
 
 
-void yyerror(const char *s) {
+void yyerror(Driver& drv,const char *s) {
     std::cerr << yylloc.first_line << ":" << yylloc.first_column
               << ": Errore: " << s << std::endl;
 }
 
 int main() {
+    Driver drv;
     std::cout << "Inserisci codice (es: int x = 10; if (x > 5) { x = x + 1; }):" << std::endl;
-    return yyparse();
+    return yyparse(drv);
 }

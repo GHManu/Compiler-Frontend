@@ -239,3 +239,10 @@ Output: Ad ogni assegnamento o valutazione dell'IF, il parser stamperà a consol
 
 ## 7. Location Tracking
 riga e colonna negli errori
+
+## 8. Driver
+serve per evitare variabili globali (tipo tabella) e raccogliere tutto il contesto
+
+%param { Driver& drv }, Bison cambia le firme di tutto automaticamente — devi adeguare lexer, yyerror e main di conseguenza
+
+YY_DECL dice a Flex qual è la firma esatta di yylex — senza di esso Flex genera int yylex() senza parametri e Bison non riesce a passargli drv.

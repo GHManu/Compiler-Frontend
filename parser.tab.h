@@ -83,7 +83,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 24 "parser.y"
+#line 13 "parser.y"
 
     int   num;
     float fnum;
@@ -116,7 +116,7 @@ struct YYLTYPE
 extern YYSTYPE yylval;
 extern YYLTYPE yylloc;
 
-int yyparse (void);
+int yyparse (Driver& drv);
 
 
 #endif /* !YY_YY_PARSER_TAB_H_INCLUDED  */
