@@ -1,8 +1,8 @@
 # !!!!!!! WORKING IN PROGRESS !!!!!!!
-# MyCompiler
+# Compiler-Frontend
 ## **Descrizione del Progetto: Interprete Lex/Yacc**
 
-Il progetto consiste nello sviluppo di un **sistema di analisi e interpretazione** di un linguaggio di programmazione semplificato. Attualmente, il sistema non genera codice macchina (compilatore), ma esegue direttamente le istruzioni man mano che vengono analizzate (**interprete**).
+Il progetto consiste nello sviluppo di un **sistema di analisi e interpretazione** di un linguaggio di programmazione semplificato. Il sistema non genera codice macchina (compilatore), ma esegue direttamente le istruzioni man mano che vengono analizzate (**interprete**).
 
 > Ho realizzato un **interprete interattivo** che legge il codice sorgente, ne valida la sintassi e calcola i risultati in tempo reale, mantenendo traccia dello stato delle variabili attraverso una tabella dei simboli integrata nel parser.
 
